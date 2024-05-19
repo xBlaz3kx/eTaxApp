@@ -1,0 +1,37 @@
+[
+  {
+    "time": "2024-05-19T09:27:52+00:00",
+    "type": "Dividend",
+    "amount": 100.00,
+    "currency": "EUR",
+    "description": "BMW dividend",
+    "metadata": {
+      "dividendCountry": "EU"
+    }
+  },
+  {
+    "time": "2024-05-19T09:27:52+00:00",
+    "type": "Stock",
+    "amount": 1000.00,
+    "currency": "EUR",
+    "description": "Tesla stock",
+    "metadata": {
+      "soldAt": "",
+      "boughtAt": ""
+    }
+  },
+  {
+    "time": "2024-05-19T09:27:52+00:00",
+    "type": "Income",
+    "amount": 50000.04,
+    "currency": "EUR",
+    "description": "Job"
+  },
+  {
+    "time": "2024-05-19T09:27:52+00:00",
+    "type": "Property",
+    "amount": 200000.00,
+    "currency": "EUR",
+    "description": "House"
+  }
+]
