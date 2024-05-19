@@ -12,7 +12,7 @@ public record FinancialRecord(
     // Currency based on ISO 4217
     string Currency,
     // Description of the transaction
-    string Description,
+    string Description
     // Additional information about the transaction
-    object Metadata
+    // object Metadata
 );

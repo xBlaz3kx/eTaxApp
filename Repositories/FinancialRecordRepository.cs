@@ -17,10 +17,14 @@ public class FinancialRecord
 
     [Column("Description")] public string Description { get; init; }
 
-    [Column("Metadata")] public object Metadata { get; init; }
+    // [Column("Metadata")] public object Metadata { get; init; }
 }
 
-public record SummaryRecord(RecordType Type, decimal Amount);
+public record SummaryRecord(RecordType Type, decimal Amount)
+{
+    public RecordType Type { get; init; } = Type;
+    public decimal Amount { get; init; } = Amount;
+}
 
 public interface IFinancialRecordRepository
 {

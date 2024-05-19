@@ -4,34 +4,37 @@ using Microsoft.Data.Sqlite;
 using SqlKata;
 using LinqToDB.Mapping;
 using LinqToDB;
+using NLog;
+using SqlKata.Compilers;
+using SqlKata.Execution;
 
 
 namespace eTaxesApp.Repositories.Sqlite
 {
-    public class Db() : LinqToDB.Data.DataConnection("Data Source=eTaxes.db")
-    {
-        public ITable<FinancialRecord> Records => this.GetTable<FinancialRecord>();
-    }
-
     public class FinancialRecordSqLiteRepository : IFinancialRecordRepository
     {
+        private const string tableName = "FinancialRecords";
         private SqliteConnection _connection;
+        private QueryFactory queryFactory;
         private NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         public FinancialRecordSqLiteRepository(SqliteConnection connection)
         {
             _connection = connection;
+
+            // Create the table if it does not exist
             string createTableQuery = @"
             CREATE TABLE IF NOT EXISTS FinancialRecords (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Date TEXT NOT NULL,
+                Date DATETIME NOT NULL,
                 Type TEXT NOT NULL,
                 Amount REAL NOT NULL,
                 Currency TEXT NOT NULL,
                 Description TEXT
             );";
-            
-            _connection.Execute(createTableQuery);
+            connection.Execute(createTableQuery);
+
+            queryFactory = new QueryFactory(connection, new SqliteCompiler());
         }
 
         public async Task<bool> AddRecordAsync(FinancialRecord record)
@@ -46,7 +49,7 @@ namespace eTaxesApp.Repositories.Sqlite
         public Task<IEnumerable<FinancialRecord>> GetRecordsAsync(DateTime? from, DateTime? to,
             IEnumerable<RecordType>? types)
         {
-            var query = new Query().From("FinancialRecords");
+            var query = queryFactory.Query().From(tableName);
 
             if (from != null)
             {
@@ -58,18 +61,18 @@ namespace eTaxesApp.Repositories.Sqlite
                 query.Where("Date", "<=", to);
             }
 
-            if (types != null)
+            if (types != null && types.Any())
             {
                 query.WhereIn("Type", types);
             }
 
-            return _connection.QueryAsync<FinancialRecord>(query.OrderBy("Date").ToString()!);
+            return query.OrderBy("Date").GetAsync<FinancialRecord>();
         }
 
         public Task<IEnumerable<SummaryRecord>> GetSummaryAsync(DateTime? from, DateTime? to,
             IEnumerable<RecordType>? types)
         {
-            var query = new Query().Select("Type").SelectRaw("SUM(`Amount`) as Amount").From("FinancialRecords");
+            var query = queryFactory.Query().SelectRaw("Type as Type, SUM(`Amount`) as Amount").From(tableName);
 
             if (from != null)
             {
@@ -81,14 +84,13 @@ namespace eTaxesApp.Repositories.Sqlite
                 query.Where("Date", "<=", to);
             }
 
-            if (types != null)
+            if (types != null && types.Any())
             {
                 query.WhereIn("Type", types);
             }
 
-            query.GroupBy("Type");
 
-            return _connection.QueryAsync<SummaryRecord>(sql: query.OrderBy("Type").ToString()!);
+            return query.GroupBy("Type").OrderBy("Type").GetAsync<SummaryRecord>();
         }
     }
 };

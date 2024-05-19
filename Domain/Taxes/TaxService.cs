@@ -3,6 +3,7 @@ using eTaxesApp.Shared.Constants;
 using eTaxesApp.Shared.Entities;
 using eTaxesApp.Shared.Exceptions;
 using FinancialRecord = eTaxesApp.Shared.Entities.FinancialRecord;
+using SummaryRecord = eTaxesApp.Shared.Entities.SummaryRecord;
 
 namespace eTaxesApp.Domain.Taxes;
 
@@ -35,7 +36,7 @@ public class TaxService(IFinancialRecordRepository financialRecordRepository) : 
                     Amount = record.Amount,
                     Currency = record.Currency,
                     Description = record.Description,
-                    Metadata = record.Metadata
+                    // Metadata = record.Metadata
                 })
                 .Select(financialRecordRepository.AddRecordAsync)
                 .Cast<Task>()
@@ -57,7 +58,7 @@ public class TaxService(IFinancialRecordRepository financialRecordRepository) : 
         return true;
     }
 
-    
+
     public async Task<IEnumerable<FinancialRecord>> GetRecordsAsync(DateTime? from, DateTime? to,
         IEnumerable<RecordType> types)
     {
@@ -80,8 +81,11 @@ public class TaxService(IFinancialRecordRepository financialRecordRepository) : 
 
         // Transform the database models to the domain models
         return records.Select(record => new FinancialRecord(record.Date,
-            RecordTypeExtensions.ToString(record.Type), record.Amount, record.Currency, record.Description,
-            record.Metadata)).ToList();
+            RecordTypeExtensions.ToString(record.Type),
+            record.Amount,
+            record.Currency,
+            record.Description)
+        ).ToList();
     }
 
     public async Task<FinancialReport> CreateTaxReportAsync(DateTime? from, DateTime? to,

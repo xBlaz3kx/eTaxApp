@@ -16,8 +16,9 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="NLog" Version="5.3.2" />
       <PackageReference Include="SQLite" Version="3.13.0" />
-        <PackageReference Include="sqlite-net-pcl" Version="1.9.172"/>
+        <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
       <PackageReference Include="SqlKata" Version="2.4.0" />
+      <PackageReference Include="SqlKata.Execution" Version="2.4.0" />
     </ItemGroup>
 
     <ItemGroup>
