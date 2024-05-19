@@ -8,7 +8,7 @@ using LinqToDB;
 
 namespace eTaxesApp.Repositories.Sqlite
 {
-    public class Db() : LinqToDB.Data.DataConnection("eTaxes.db")
+    public class Db() : LinqToDB.Data.DataConnection("Data Source=eTaxes.db")
     {
         public ITable<FinancialRecord> Records => this.GetTable<FinancialRecord>();
     }
@@ -21,12 +21,24 @@ namespace eTaxesApp.Repositories.Sqlite
         public FinancialRecordSqLiteRepository(SqliteConnection connection)
         {
             _connection = connection;
+            string createTableQuery = @"
+            CREATE TABLE IF NOT EXISTS FinancialRecords (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Date TEXT NOT NULL,
+                Type TEXT NOT NULL,
+                Amount REAL NOT NULL,
+                Currency TEXT NOT NULL,
+                Description TEXT
+            );";
+            
+            _connection.Execute(createTableQuery);
         }
 
         public async Task<bool> AddRecordAsync(FinancialRecord record)
         {
-            await using var db = new Db();
-            var res = await db.InsertAsync(record);
+            var res = await _connection.ExecuteAsync(
+                "INSERT INTO FinancialRecords (Date,Amount,Type, Currency, Description)" +
+                "VALUES (@Date, @Amount, @Type, @Currency, @Description);", record);
 
             return res == 0;
         }
