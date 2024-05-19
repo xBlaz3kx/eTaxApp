@@ -15,5 +15,5 @@ public class ExportCommand
     public DateTime? To { get; set; }
 
     [Option("types", Required = false, Separator = ',', HelpText = "Types of data to be exported")]
-    public IEnumerable<string> Types { get; set; }
+    public IEnumerable<string>? Types { get; set; }
 }

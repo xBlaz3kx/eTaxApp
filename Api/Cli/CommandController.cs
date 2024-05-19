@@ -86,7 +86,10 @@ public class CommandController(ITaxService taxService) : ICliCommandController
         catch (Exception e)
         {
             _logger.Error(e, "Failed to export records.");
+            return;
         }
+
+        _logger.Info("Successfully exported records.");
     }
 
     public async void Calculate(string output, DateTime? from, DateTime? to, IEnumerable<RecordType> types)
@@ -105,6 +108,9 @@ public class CommandController(ITaxService taxService) : ICliCommandController
         catch (Exception e)
         {
             _logger.Error(e, "Failed to calculate taxes.");
+            return;
         }
+
+        _logger.Info("Successfully calculated taxes.");
     }
 }
