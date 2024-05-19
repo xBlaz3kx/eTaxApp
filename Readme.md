@@ -1,32 +1,32 @@
-# eTaxApp
+# eTaxesApp
 
 A simple CLI application that calculates taxes for various financial resources, such as income, stocks, dividends and
 properties.
 
 ## Features
 
-- Importing financial records
-- Exporting financial records
-- Calculating tax
+- Importing financial records (from JSON files)
+- Exporting financial records (in JSON format)
+- Calculating taxes for a specific period of time
 
 ## Usage
 
 Importing financial records:
 
 ```bash
-eTaxes import --files=a.json,b.yaml,c.csv
+eTaxesApp import --files=a.json,b.yaml,c.csv
 ```
 
 Exporting financial records:
 
 ```bash
-eTaxes export --from=2024-01-1T09:27:52+00:00 --to=2024-05-19T09:27:52+00:00 --type=property --types=income,stock
+eTaxesApp export --from=2024-01-1T09:27:52+00:00 --to=2024-05-19T09:27:52+00:00 --types=Income,Stock --output=export.json
 ```
 
 Performing tax calculation:
 
 ```bash
-eTaxes calculate --from=2024-01-1T09:27:52+00:00 --to=2024-05-19T09:27:52+00:00 --format=csv --type=income
+eTaxesApp calculate --types=Income ./taxes.json
 ```
 
 ## Tech
