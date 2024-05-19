@@ -20,10 +20,10 @@ public class FinancialRecord
     // [Column("Metadata")] public object Metadata { get; init; }
 }
 
-public record SummaryRecord(RecordType Type, decimal Amount)
+public class SummaryRecord
 {
-    public RecordType Type { get; init; } = Type;
-    public decimal Amount { get; init; } = Amount;
+    public RecordType Type { get; init; }
+    public decimal Amount { get; init; }
 }
 
 public interface IFinancialRecordRepository

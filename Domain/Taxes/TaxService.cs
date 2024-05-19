@@ -150,7 +150,7 @@ public class TaxService(IFinancialRecordRepository financialRecordRepository) : 
                     break;
             }
 
-            financialRecordsOutput.Add(new SummaryRecord(Amount: tax, Type: record.Type));
+            financialRecordsOutput.Add(new SummaryRecord(Amount: tax, Type: RecordTypeExtensions.FromString(record.Type.ToString())));
         }
 
         // We'll assume that everything is in EUR for now
